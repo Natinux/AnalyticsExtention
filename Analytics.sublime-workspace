@@ -1,0 +1,538 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"cl",
+				"clear_inputs"
+			],
+			[
+				"ge",
+				"getElementById"
+			],
+			[
+				"sa",
+				"save_state"
+			],
+			[
+				"pa",
+				"path"
+			],
+			[
+				"re",
+				"return"
+			],
+			[
+				"get",
+				"getAttribute"
+			],
+			[
+				"loa",
+				"localStorage"
+			],
+			[
+				"br",
+				"breakLine"
+			],
+			[
+				"to",
+				"toRemove"
+			],
+			[
+				"max",
+				"max-height"
+			],
+			[
+				"add",
+				"add_path"
+			],
+			[
+				"se",
+				"setAttribute"
+			],
+			[
+				"a",
+				"aciton"
+			],
+			[
+				"ad",
+				"add_path"
+			],
+			[
+				"va",
+				"value"
+			],
+			[
+				"ch",
+				"checkboxCounter"
+			],
+			[
+				"t",
+				"type	Attr"
+			],
+			[
+				"in",
+				"input"
+			],
+			[
+				"ta",
+				"tabId"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"typ",
+				"type"
+			],
+			[
+				"fun",
+				"function"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "{\n    \"name\": \"Analytics\",\n    \"version\": \"0.0.1\",\n    \"manifest_version\": 2,\n    \"description\":\"Google analytics viewer.\",\n    \"icons\":{\n        \"16\": \"icons/16x16.png\",\n        \"19\": \"icons/19x19.png\",\n        \"38\": \"icons/38x38.png\",\n        \"48\": \"icons/48x48.png\",\n        \"128\": \"icons/128x128.png\"\n    },\n    \"options_page\": \"options.html\",\n    \"browser_action\":{\n    	\"default_icon\":{\n    		\"19\": \"icons/19x19.png\",\n    		\"38\": \"icons/38x38.png\"\n    	},\n    	\"default_title\": \"Google Analytics\",\n    	\"default_popup\": \"popup.html\"\n    },\n    \"background\":{\n    	\"scripts\": [\"background.js\"],\n    	\"persistent\": true\n    },\n    \"content_scripts\":[{\n    	\"matches\": [\"http://*/*\", \"https://*/*\"],\n    	\"js\": [\"content.js\"]\n    }],\n    \"permissions\":[\n        \"webNavigation\",\n    	\"webRequest\",\n    	\"webRequestBlocking\",\n    	\"*://*.google.com/analytics/*\",\n        \"tabs\"\n    ]\n}",
+			"file": "manifest.json",
+			"file_size": 923,
+			"file_write_time": 130297112172283566,
+			"settings":
+			{
+				"buffer_size": 887,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "<html>\n<head><title>My Test Extension Options</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"options.css\">\n</head>\n\n<body>\n\n<div class=\"container\">\n  <header>\n  Google Analytics Viewer Settings\n</header>\n<div class=\"global-setting-container\">\n  Google Analytics link: (Without the path) <input type=\"url\" value=\"https://www.google.com/analytics/web/\" />\n\n  Refresh Interval: <input type=\"number\" value=\"10\" />\n</div><br>\n\n<div class=\"paths-setting-container\">\n	<h3>Please add paths you want to view:</h5>\n	<div class=\"name-container\">\n		Name: <input type=\"text\" id=\"name-input\"/>\n	</div>\n	<div class=\"path-container\">\n		Path: <input type=\"url\" id=\"path-input\"/>\n	</div>\n	<button id=\"add-button\">Add</button>\n	<h4>Paths List:</h4>\n	<div id=\"path-list-container\">\n		\n	</div>\n	<button id=\"save-button\">Save</button>\n	<br>\n	<div id=\"status\"></div>\n</div>\n \n</body>\n\n<script src=\"options.js\"></script>\n\n</html>",
+			"file": "options.html",
+			"file_size": 950,
+			"file_write_time": 130297249263714747,
+			"settings":
+			{
+				"buffer_size": 911,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "body{\n  width:100%;\n  height:100%;\n}\n.container{\n  margin: 0 auto;\n  width:50%;\n  height:100%\n}\nheader{\n  text-align:center;\n  padding: 10px;\n  font-size:22px;\n}\n.global-setting-container{\n}\n/*.global-setting-container input{\n  width:100%;\n}*/\ninput[type=\"url\"]{\n	width: 100%;\n}\n#path-list-container{\n	overflow: scroll;\n	border: 2px solid #ccc;\n	max-height: 300px;\n}\n.delete-row{\n	float: right;\n	cursor: pointer;\n}\n.delete-row:hover{\n	text-decoration: underline;\n}",
+			"file": "options.css",
+			"file_size": 497,
+			"file_write_time": 130297207769311403,
+			"settings":
+			{
+				"buffer_size": 464,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "// Restores select box state to saved value from localStorage.\nfunction restore_options() {\n  var paths = localStorage['paths'];\n  if(!paths) return;\n  try{\n    paths = JSON.parse(paths);\n  }catch (e){\n    return;\n  }\n  \n\n  for (var i = 0; i < paths.length; i++) {\n    var name = paths[i].name;\n    var path = paths[i].path;\n    add_path(name, path);\n  }\n}\n\n\nfunction add_path_click(){\n  var name = document.getElementById(\"name-input\");\n  var path = document.getElementById(\"path-input\");\n  if(!name || !path || !name.value || !path.value){\n    alert(\"Please input data\");\n    return false;\n  } \n  if(!!name.value && !!path.value){\n    name = name.value;\n    path = path.value;\n  }\n  \n  add_path(name, path);\n  clear_inputs();\n    // Update status to let user know options were saved.\n  var status = document.getElementById(\"status\");\n  status.innerHTML = \"Path added.\";\n  setTimeout(function() {\n    status.innerHTML = \"\";\n  }, 1000);\n  \n}\n\nfunction clear_inputs(){\n  document.getElementById('name-input').value = '';\n  document.getElementById('path-input').value = '';\n}\n\nvar checkboxCounter = [];\nfunction add_path(name, path){\n  var pathList = document.getElementById('path-list-container');\n  var input = document.createElement('input');\n  input.setAttribute('type', 'checkbox');\n  input.setAttribute('id', 'checkbox-'+checkboxCounter.length);\n  input.setAttribute('value', path);\n  input.setAttribute('name', name);\n\n  var aciton = document.createElement('a');\n  aciton.setAttribute('htmlFor', 'checkbox-'+checkboxCounter.length);\n  aciton.className = 'delete-row';\n  aciton.textContent = 'delete';\n\n  \n  var label = document.createElement('label');\n  label.setAttribute('htmlFor', 'checkbox-'+checkboxCounter.length);\n  label.appendChild(document.createTextNode(name));\n\n  var breakLine = document.createElement('br');\n  breakLine.setAttribute('htmlFor', 'checkbox-'+checkboxCounter.length);\n\n  pathList.appendChild(input);\n  pathList.appendChild(label);\n  pathList.appendChild(aciton);\n  pathList.appendChild(breakLine); \n\n  checkboxCounter.push({name:name, path:path, rowId: 'checkbox-'+checkboxCounter.length});\n  save_state();\n}\n\nfunction path_click(e){\n  \n  if(!!e && !!e.target && e.target.className === \"delete-row\"){\n    var rowId = e.target.getAttribute('htmlFor');\n    remove_row(rowId);\n  }\n  return false;\n}\n\nfunction remove_row(rowId){\n  if(!rowId) return;\n  var toRemove = document.querySelectorAll('*[htmlfor=\"'+rowId+'\"]');\n  document.getElementById(rowId).remove();\n  for (var i = 0; i < toRemove.length; i++) {\n    toRemove[i].remove();\n  }\n  \n  for (var i = 0; i < checkboxCounter.length; i++) {\n    if(checkboxCounter[i].rowId === rowId){\n      checkboxCounter.splice(i, 1);\n    } \n  }\n  save_state();\n}\n\nfunction save_state(){\n  localStorage['paths'] = JSON.stringify(checkboxCounter);\n}\n\nfunction save_click(){\n  save_state();\n}\ndocument.addEventListener('DOMContentLoaded', restore_options);\ndocument.querySelector('#add-button').addEventListener('click', add_path_click);\ndocument.querySelector('#save-button').addEventListener('click', save_click);\ndocument.querySelector('#path-list-container').addEventListener('click', path_click);",
+			"file": "options.js",
+			"file_size": 3280,
+			"file_write_time": 130297257577870290,
+			"settings":
+			{
+				"buffer_size": 3167,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "<!DOCTYPE html>\n<html>\n<head>\n	<title></title>\n	<script type=\"text/javascript\" src=\"popup.js\"></script>\n</head>\n<body>\n<div style=\"width:200px\">\n	<button id=\"button\">Color all the divs</button>\n</div>\n</body>\n</html>",
+			"file": "popup.html",
+			"file_size": 227,
+			"file_write_time": 130297111024727930,
+			"settings":
+			{
+				"buffer_size": 216,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "window.onload = function() {\n	document.getElementById(\"button\").onclick = function() {\n		chrome.extension.sendMessage({\n	        type: \"open-tab\"\n	    });\n	}\n}",
+			"file": "popup.js",
+			"file_size": 165,
+			"file_write_time": 130297262118530001,
+			"settings":
+			{
+				"buffer_size": 159,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "// listening for an event / one-time requests\n// coming from the popup\nchrome.extension.onMessage.addListener(function(request, sender, sendResponse) {\n    switch(request.type) {\n        case \"open-tab\":\n            openTab();\n        break;\n    }\n    console.log('message');\n\n    return true;\n});\n \n var ports = {};\n// listening for an event / long-lived connections\n// coming from devtools\nchrome.extension.onConnect.addListener(function (port) {\n    ports[port.portId_] = port;\n    port.onDisconnect.addListener(function(port) {\n        delete ports[port.portId_];\n    });\n    port.onMessage.addListener(function (message) {\n        \n        switch(port.name) {\n            case \"color-divs-port\":\n                colorDivs();\n                openTab();\n            break;\n        }\n    });\n});\n \n// send a message to the content script\nvar colorDivs = function() {\n    chrome.tabs.getSelected(null, function(tab){\n        chrome.tabs.sendMessage(tab.id, {type: \"colors-div\", color: \"#F00\"});\n        // setting a badge\n        // chrome.browserAction.setBadgeText({text: \"red!\"});\n    });\n}\n\nvar openTab = function(){\n    var paths = localStorage['paths'];\n      if(!paths) return;\n      try{\n        paths = JSON.parse(paths);\n      }catch (e){\n        return;\n      }\n      \n\n      for (var i = 0; i < paths.length; i++) {\n        var name = paths[i].name;\n        var path = paths[i].path;\n        \n        chrome.tabs.create({url:'https://www.google.com/analytics/web/'+path},\n        function(tab){\n            console.log('Opened new tab with id:'+tab.id);\n            Object.keys(ports).forEach(function(portId_) {\n                ports[portId_].postMessage('New tab ['+tab.id+']');\n            });\n        });\n      }\n    \n}\n\nvar highlightTab = function(tabId){\n    chrome.tabs.highlight({tabs:tabId}, function(win){\n\n    });\n}\n\n// chrome.webRequest.onBeforeRequest.addListener(\n//     function(details) {\n//         if(details.url.indexOf('analytics') > 0){\n//             details.type = \"xmlhttprequest\";\n//         }\n//          return details;\n//     },\n//     {\n//         urls: [\n//             \"*://*.google.com/analytics/*\"\n//         ],\n//         types: [\"main_frame\", \"sub_frame\", \"stylesheet\", \"script\", \"image\", \"object\", \"xmlhttprequest\", \"other\"]\n//     },\n//     [\"blocking\"]\n// );\n\n\n// chrome.webRequest.onHeadersReceived.addListener(function(details){\n// 	// console.log(details);\n// 	var headers = details.responseHeaders;\n//     for(var i = 0; i < details.responseHeaders.length; ++i){\n//     	if(details.responseHeaders[i].name.toLowerCase() == 'x-frame-options'){\n//     		// details.responseHeaders[i].value = 'text/plain';\n//     		// details.responseHeaders[i]\n//     		console.log('Removed x-frame-options header.');\n//     		headers.splice(i, 1);\n//     	}\n//     }\n//     return {responseHeaders:headers};\n// }, {urls: [\"<all_urls>\"]}, ['blocking', 'responseHeaders']);",
+			"file": "background.js",
+			"file_size": 3010,
+			"file_write_time": 130297263827987776,
+			"settings":
+			{
+				"buffer_size": 2909,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 35.0,
+		"selected_items":
+		[
+		],
+		"width": 416.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Nati/Desktop/ana.html",
+		"/C/Users/Nati/Desktop/my_extention/background.js",
+		"/C/Users/Nati/Desktop/my_extention/frame.html",
+		"/C/Users/Nati/Desktop/my_extention/devtools/devtoolscontent.html",
+		"/C/Users/Nati/Desktop/my_extention/devtools/devtoolscontent.js",
+		"/C/Users/Nati/Desktop/my_extention/devtools/devtools.js",
+		"/C/Users/Nati/Desktop/my_extention/popup.html",
+		"/C/Users/Nati/Desktop/my_extention/manifest.json",
+		"/C/Users/Nati/Desktop/my_extention/content.js",
+		"/C/Users/Nati/Desktop/require/site.js",
+		"/C/Users/Nati/Desktop/require/load.js",
+		"/C/Users/Nati/Desktop/require/site2.js",
+		"/C/Users/Nati/Desktop/friends.txt",
+		"/C/Users/Nati/Desktop/require/site.html",
+		"/C/Users/Nati/Desktop/require/require.js"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"paths",
+			"';\n",
+			"checkbox",
+			"addEventListener",
+			"_window",
+			"onBeforeSendHeaders",
+			"handlers",
+			"handler",
+			"depExports",
+			"handlers",
+			"uri",
+			"this.depExports"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 6,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "manifest.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 887,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								333,
+								340
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 24.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "options.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 911,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								818,
+								818
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 336.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "options.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 464,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								361,
+								361
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 288.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "options.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3167,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								354,
+								94
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "popup.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 216,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "popup.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 159,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								144,
+								144
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "background.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2909,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1482,
+								1482
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1017.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"project": "Analytics.sublime-project",
+	"replace":
+	{
+		"height": 60.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 168.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
