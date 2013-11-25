@@ -30,13 +30,6 @@ table {
     border-spacing: 0;
 }
 
-/* * Copyright (c) 2012 Thibaut Courouble
- * http://www.webinterfacelab.com
- *
- * Licensed under the MIT License:
- * http://www.opensource.org/licenses/mit-license.php
-   ================================================== */
-
 /* ========================================================
    Page
    =====================================================
@@ -68,43 +61,51 @@ a:hover { text-decoration: underline }
    =====================================================
    ================================================== */
 
-[class^="icon-"], [class*=" icon-"] {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    vertical-align: -2px;
-    margin-right: 2px;
-    background-image: url("img/sprite.png");
-    background-repeat: no-repeat;
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
+@font-face {
+  font-family: 'icomoon';
+  src:url('fonts/icomoon.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
-.icon-check { background-position: 0 0 }
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'icomoon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
 
-.icon-add { background-position: -12px 0 }
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+}
 
+.icon-add:before { content: "\e601"; }
 
-.icon-settings { background-position: -36px 0 }
+.icon-save:before { content: "\e602"; }
 
-.icon-previous { background-position: -48px 0 }
-
-.icon-next { background-position: -60px 0 }
+.icon-close{
+  margin-right: -4px;
+  margin-top: -4px;
+}
+.icon-close:hover{
+  text-decoration: none;
+}
+.icon-close:before { content: "\e603"; }
 
 .icon-delete { 
-  background-position: -24px 0;
   float: right;
   margin-top: 5px;
  }
+ .icon-delete:before{ content: "\e600"; }
 /* ========================================================
-   Todo List
+   Paths List
    =====================================================
    ================================================== */
 
-.todo {
+.options {
     position: relative;
-    /*width: 260px;*/
     margin: 0 auto;
     padding: 12px 0;
     background: #fff;
@@ -112,11 +113,10 @@ a:hover { text-decoration: underline }
     border-color: #dfdcdc #d9d6d6 #ccc;
     border-radius: 2px;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.todo:before, .todo:after {
+.options:before, .options:after {
     content: '';
     position: absolute;
     z-index: -1;
@@ -126,33 +126,26 @@ a:hover { text-decoration: underline }
     border-radius: 2px;
 }
 
-.todo:after {
+.options:after {
     left: 0;
     right: 0;
     bottom: -3px;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.todo:before {
+.options:before {
     left: 2px;
     right: 2px;
     bottom: -5px;
     border-color: #c4c4c4;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-.lt-ie9 .todo:before, .lt-ie9 .todo:after {
-    height: 1px;
-    border-top: 0;
-}
+.path-list { border-top: 1px solid #e6ebed }
 
-.todo-list { border-top: 1px solid #e6ebed }
-
-.todo-list:before {
+.path-list:before {
     content: '';
     width: 3px;
     z-index: 2;
@@ -164,7 +157,7 @@ a:hover { text-decoration: underline }
     left: 35px;
 }
 
-.todo-list li {
+.path-list li {
     position: relative;
     padding: 7px 15px 7px 50px;
     line-height: 21px;
@@ -181,16 +174,16 @@ input[type=checkbox]:checked + .toggle:after{
   opacity: 1;
 }
 
-.todo-list .toggle {
-    display: block;
+.path-list .toggle {
+  display: block;
   height: 35px;
   width: 35px;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    text-indent: 100%;
-    overflow: hidden;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  text-indent: 100%;
+  overflow: hidden;
   cursor: pointer;
 }
 
@@ -208,14 +201,11 @@ input[type=checkbox]:checked + .toggle:after{
   border-right: none;
 
   -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
   opacity: 0;
 }
 
-.todo-list .toggle:before {
+.path-list .toggle:before {
     content: '';
     width: 15px;
     height: 15px;
@@ -226,123 +216,253 @@ input[type=checkbox]:checked + .toggle:after{
     top: 9px;
     left: 9px;
     -webkit-box-shadow: 0 1px 1px #dfecf4;
-    -moz-box-shadow: 0 1px 1px #dfecf4;
     box-shadow: 0 1px 1px #dfecf4;
 }
 
-.todo-list .toggle:hover:before {
+.path-list .toggle:hover:before {
     -webkit-box-shadow: 0 0 3px #6bb3ca;
-    -moz-box-shadow: 0 0 3px #6bb3ca;
     box-shadow: 0 0 3px #6bb3ca;
 }
 
-.todo-list .done .toggle:before, .todo-list .toggle:active:before {
+.path-list .done .toggle:before, .path-list .toggle:active:before {
     border-color: #c0c0c0 #ccc #d8d8d8;
     -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.05), inset 0 5px 5px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px rgba(0, 0, 0, 0.05), inset 0 5px 5px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.05), inset 0 5px 5px rgba(0, 0, 0, 0.05);
 }
-.todo-controls {
+.paths-controls {
     margin: 0 15px 12px 50px;
     height: 12px;
 }
 
-.todo-controls li { float: left }
+.paths-controls li { float: left }
 
-.todo-controls li + li { margin-left: 10px }
+.paths-controls li + li { margin-left: 10px }
 
-.todo-controls .right { float: right }
+.paths-controls .right { float: right }
 
-.todo-controls a {
+.paths-controls a {
     display: block;
     margin: 0;
     opacity: .6;
 }
 
-.todo-controls a:hover { opacity: 1 }
+.paths-controls a:hover { opacity: 1 }
 
-.todo-pagination {
+.paths-footer {
     margin: 12px 12px 0 50px;
     height: 22px;
 }
 
-.todo-pagination li { float: left }
+.paths-footer li { float: left }
 
-.todo-pagination .next { float: right }
+.paths-footer .refresh { margin-top: -5px; }
 
-.todo-pagination .next i { margin: 0 0 0 2px }
+.paths-footer .save { float: right }
 
-.todo-pagination a, .todo-pagination span {
+.paths-footer .save i { margin: 0 0 0 2px }
+
+.paths-footer a, .paths-footer span {
     display: block;
     line-height: 22px;
     font-size: 11px;
     color: #676f7f;
 }
 
-.todo-pagination a {
+.paths-footer a {
     padding: 0 8px;
     text-shadow: 0 1px #fff;
     background: #f1f0f0;
     border-radius: 3px;
 }
 
-.todo-pagination a:hover {
+.paths-footer a:hover {
     background: #e9e9e9;
     text-decoration: none;
 }
 
-.todo-pagination span {
+.paths-footer span {
     padding: 0 4px;
     opacity: .3;
 }
 
 /* ========================================================
-   About
+   Add Form
    =====================================================
-   ================================================== */
+   ===================================================== */
 
-.about {
-    margin: 80px auto 50px;
-    padding: 15px 20px;
-    width: 300px;
+.add-container {
+  margin: 80px auto;
+  width: 640px;
+  position: absolute;
+  top: 0;
+  display: none;
+}
+
+.add-container .background{
+  background-color: #000000;
+  height: 100%;
+  left: 0;
+  opacity: 0.8;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.add-form {
+  z-index: 3;
+  position: relative;
+  margin: 0 auto;
+  padding: 20px 20px 20px;
+  /*width: 310px;*/
+  width: 100%
+  background: white;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/*form[method=post]{
+  width: 100%;
+}*/
+
+.add-form .right{ float: right; }
+
+.add-form:before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+}
+.add-form .path-header {
+  margin: -20px -20px 21px;
+  line-height: 40px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #555;
+  text-align: center;
+  text-shadow: 0 1px white;
+  background: #f3f3f3;
+  border-bottom: 1px solid #cfcfcf;
+  border-radius: 3px 3px 0 0;
+  background-image: -webkit-linear-gradient(top, whiteffd, #eef2f5);
+  background-image: -moz-linear-gradient(top, whiteffd, #eef2f5);
+  background-image: -o-linear-gradient(top, whiteffd, #eef2f5);
+  background-image: linear-gradient(to bottom, whiteffd, #eef2f5);
+  -webkit-box-shadow: 0 1px whitesmoke;
+  box-shadow: 0 1px whitesmoke;
+}
+.add-form p {
+  margin: 20px 0 0;
+  
+}
+.add-form p:not(.submit){
+  display: flex;
+}
+.add-form p:first-child {
+  margin-top: 0;
+}
+.add-form input[type=text], .add-form input[type=url] {
+  /*width: 278px;*/
+  width: 100%;
+}
+.add-form p.remember_me {
+  float: left;
+  line-height: 31px;
+}
+.add-form p.remember_me label {
+  font-size: 12px;
+  color: #777;
+  cursor: pointer;
+}
+.add-form p.remember_me input {
+  position: relative;
+  bottom: 1px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.add-form p.submit {
+  text-align: right;
+}
+
+::-webkit-input-placeholder {
+  color: #ccc;
+  font-size: 13px;
+}
+
+input {
+  font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
+  font-size: 14px;
+}
+
+input[type=text], input[type=url], input[type=number] {
+  margin: 5px;
+  padding: 0 10px;
+  width: 200px;
+  height: 34px;
+  color: #404040;
+  background: white;
+  border: 1px solid;
+  border-color: #c4c4c4 #d1d1d1 #d4d4d4;
+  border-radius: 2px;
+  outline: 5px solid #eff4f7;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+input[type=number]{
+  height: auto;
+  width: 100px;
+}
+input[type=text]:focus, input[type=url]:focus {
+  border-color: #7dc9e2;
+  outline-color: #dceefc;
+  outline-offset: 0;
+}
+
+input[type=submit] {
+  padding: 0 18px;
+  height: 29px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #527881;
+  text-shadow: 0 1px #e3f1f1;
+  background: #cde5ef;
+  border: 1px solid;
+  border-color: #b4ccce #b3c0c8 #9eb9c2;
+  border-radius: 16px;
+  outline: 0;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  background-image: -webkit-linear-gradient(top, #edf5f8, #cde5ef);
+  background-image: -moz-linear-gradient(top, #edf5f8, #cde5ef);
+  background-image: -o-linear-gradient(top, #edf5f8, #cde5ef);
+  background-image: linear-gradient(to bottom, #edf5f8, #cde5ef);
+  -webkit-box-shadow: inset 0 1px white, 0 1px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px white, 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+input[type=submit]:active {
+  background: #cde5ef;
+  border-color: #9eb9c2 #b3c0c8 #b4ccce;
+  -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+
+#footer {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-top: 1px solid #DDDDDD;
+    color: #999999;
+    font-size: 0.8em;
+    left: 0;
+    margin: 0;
+    padding: 20px;
+    position: relative;
     text-align: center;
-    color: #777;
-    text-shadow: 0 1px rgba(255, 255, 255, 0.7);
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 3px;
-}
-
-.about a {
-    padding: 1px 3px;
-    margin: 0 -1px;
-    color: #1c74c8;
-    text-decoration: none;
-    border-radius: 2px;
-}
-
-.about a:hover {
-    color: #fff;
-    text-shadow: 0 1px #0063A6;
-    background: #0090D2;
-}
-
-.links { zoom: 1 }
-
-.links:before, .links:after {
-    content: "";
-    display: table;
-}
-
-.links:after { clear: both }
-
-.links a {
-    padding: 6px 0;
-    float: left;
-    width: 50%;
-    font-size: 14px;
-}
-
-.author {
-    margin-top: 15px;
-    font-size: 11px;
+    text-shadow: 0 1px 1px #FFFFFF;
+    top: 0;
 }

@@ -5,40 +5,57 @@
 
 <body>
 <div class="container">
-	<section class="todo">
-		<ul class="todo-controls">
-			<li><a href="javascript:void(0);" class="icon-add">Add</a></li>
-			<li><a href="javascript:void(0);" class="icon-delete">Delete</a></li>
-			<li class="right"><a href="javascript:void(0);" class="icon-settings">Settings</a></li>
+	<section class="options">
+		<ul class="paths-controls">
+			<li><a href="javascript:void(0);" class="icon-add add-button"></a></li>
 		</ul>
 	
-		<ul class="todo-list">
+		<ul class="path-list">
 			<li class="done">
 				<input type="checkbox" id="find" checked disabled/> 
 				<label class="toggle" for="find"></label>
-				<a class="icon-delete" href="javascript:void(0);">Delete</a>
+				<a class="icon-delete" href="javascript:void(0);"></a>
 				Find an idea.
 			</li>
 			<li>
 				<input type="checkbox" id="build"/> 
 				<label class="toggle" for="build"></label>
-				<a class="icon-delete" href="javascript:void(0);">Delete</a>
+				<a class="icon-delete" href="javascript:void(0);"></a>
 				Build it!
 			</li>
 			<li>
 				<input type="checkbox" id="ship"/> 
 				<label class="toggle" for="ship"></label>
-				<a class="icon-delete" href="javascript:void(0);">Delete</a>
+				<a class="icon-delete" href="javascript:void(0);"></a>
 				Ship it...<br />
 				with a line break!
 			</li>
 		</ul>
 		
-		<ul class="todo-pagination">
-			<li class="previous"><span><i class="icon-previous"></i> Previous</span></li>
-			<li class="next"><a href="javascript:void(0);">Next <i class="icon-next"></i></a></li>
+		<ul class="paths-footer">
+			<li class="refresh">Refresh Rate:<input type="number" placeholder="[1-...]" value="10" name="refresh">seconds</li>
+			<li class="save"><a href="javascript:void(0);">Save <i class="icon-save"></i></a></li>
 		</ul>
 	</section>
+	<section class="add-container">
+		<div class="background"></div>
+		<div class="add-form">
+			<div class="path-header">
+				<a href="javascript:void(0);" class="icon-close close-button right"></a>
+				<h1>Add Path</h1> 
+			</div>
+			<form method="get" onSubmit="add_path(this); return false;">
+				<p><input type="text" name="Name" value="" placeholder="Name"></p>
+				<p><input type="url" name="path" value="" placeholder="Path"></p>
+				<p class="submit"><input type="submit" name="commit" value="Add"></p>
+			</form>
+		</div>
+	</section>
+	<div id="footer">
+		&copy; Copyright 2013 All Rights Reserved. This extention was built by <a href="http://lnkd.in/dHcD9Ks">Nati Nazarov</a>
+	</div>
 </div>
 </body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="options2.js"></script>
 </html>
