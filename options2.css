@@ -250,10 +250,10 @@ input[type=checkbox]:checked + .toggle:after{
 
 .paths-footer {
     margin: 12px 12px 0 50px;
-    height: 22px;
+    height: 75px;
 }
 
-.paths-footer li { float: left }
+/*.paths-footer li { float: left }*/
 
 .paths-footer .refresh { margin-top: -5px; }
 

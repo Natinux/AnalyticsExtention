@@ -11,30 +11,12 @@
 		</ul>
 	
 		<ul class="path-list">
-			<li class="done">
-				<input type="checkbox" id="find" checked disabled/> 
-				<label class="toggle" for="find"></label>
-				<a class="icon-delete" href="javascript:void(0);"></a>
-				Find an idea.
-			</li>
-			<li>
-				<input type="checkbox" id="build"/> 
-				<label class="toggle" for="build"></label>
-				<a class="icon-delete" href="javascript:void(0);"></a>
-				Build it!
-			</li>
-			<li>
-				<input type="checkbox" id="ship"/> 
-				<label class="toggle" for="ship"></label>
-				<a class="icon-delete" href="javascript:void(0);"></a>
-				Ship it...<br />
-				with a line break!
-			</li>
 		</ul>
 		
 		<ul class="paths-footer">
-			<li class="refresh">Refresh Rate:<input type="number" placeholder="[1-...]" value="10" name="refresh">seconds</li>
-			<li class="save"><a href="javascript:void(0);">Save <i class="icon-save"></i></a></li>
+			<li class="refresh">Refresh Rate:<input id="refresh-input" type="number" placeholder="[1-...]" value="10" name="refresh">seconds</li>
+			<li class="refresh">Next Tab Rate:<input type="number" placeholder="[1-...]" value="10" name="nextTab">seconds</li>
+			<li class="save"><a id="save-button" href="javascript:save();">Save <i class="icon-save"></i></a></li>
 		</ul>
 	</section>
 	<section class="add-container">
