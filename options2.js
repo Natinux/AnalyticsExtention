@@ -102,6 +102,9 @@ function update_list(id, opts){
 
 function save(){
 	localStorage['paths-list'] = JSON.stringify(pathsList);
+	localStorage['refresh-rate'] = JSON.stringify($('input[name=refresh]').val());
+	localStorage['next-tab-rate'] = JSON.stringify($('input[name=nextTab]').val());
+
 	// TODO - update the user ...
 	// save the refresh value
 }
@@ -111,12 +114,31 @@ function restore_options() {
   if(!paths) return;
   try{
     pathsList = JSON.parse(paths);
+    refresh_list();
   }catch (e){
-    return;
   }
-  
-  refresh_list();
+
+	//==============================
+	var refreshRate = localStorage['refresh-rate'];
+	if(!!refreshRate){
+		$('input[name=refresh]').val(refreshRate);
+		console.log("refresh:"+refreshRate);
+	}
+
+	//=============================
+	var nextTabRate = localStorage['next-tab-rate'];
+	if(!!nextTabRate){
+		$('input[name=nextTab]').val(nextTabRate);
+		console.log('nextTab:'+nextTabRate);
+	}
 }
+
+function before_leave(e){
+	save();
+	return ;
+}
+
 
 var pathsList = [];
 document.addEventListener('DOMContentLoaded', on_dom_ready);
+window.addEventListener('beforeunload', before_leave);
