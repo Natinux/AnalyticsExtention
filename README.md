@@ -1,4 +1,4 @@
-AnalyticsExtention
+Tabs Switcher
 ==================
 
-Google Analytics Viewer Extention for Chrome 
+Tabs Switcher Viewer Extention for Chrome 
