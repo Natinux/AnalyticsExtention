@@ -1,4 +1,4 @@
 Tabs Switcher
 ==================
 
-Tabs Switcher Viewer Extention for Chrome 
+Tabs Switcher Viewer Extension for Chrome 
