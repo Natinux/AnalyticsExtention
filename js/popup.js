@@ -1,5 +1,8 @@
 function on_dom_ready(){
 	$('button').on('click', btn_clicked);
+	port = chrome.extension.connect({ name: "open-tabs-port" });
+	port.onMessage.addListener(function (message) {
+	});
 }
 
 function btn_clicked(e){
@@ -8,20 +11,17 @@ function btn_clicked(e){
 		if(e.currentTarget.className == btnStates[0]){
 			// start
 			e.currentTarget.className = btnStates[1];
-			chrome.extension.sendMessage({
-				type: "start-open-tabs"
-			});
+			port.postMessage({ type: "start-switcher"});
 		}else{
 			// stop
 			e.currentTarget.className = btnStates[0];
-			chrome.extension.sendMessage({
-				type: "stop-open-tabs"
-			});
+			port.postMessage({ type: "stop-switcher"});
 		}
 	}catch ( ex ){
 		console.log(ex);
 	}
 }
 
+var port;
 var btnStates = ['stopped', 'started'];
 document.addEventListener('DOMContentLoaded', on_dom_ready);

@@ -14,8 +14,9 @@
 		</ul>
 		
 		<ul class="paths-footer">
-			<li class="refresh">Refresh Rate:<input id="refresh-input" type="number" placeholder="[1-...]" value="10" name="refresh">seconds</li>
-			<li class="refresh">Next Tab Rate:<input type="number" placeholder="[1-...]" value="10" name="nextTab">seconds</li>
+			<li class="refresh">Refresh Rate:<input id="refresh-input" type="number" placeholder="[1-...]" value="0" name="refresh">seconds</li>
+			<li class="refresh">Next Tab Rate:<input type="number" placeholder="[1-...]" value="0" name="nextTab">seconds</li>
+			<li class="clear"><a id="clear-button" href="javascript:clear();">Clear<i class="icon-clear"></i></a></li>
 			<li class="save"><a id="save-button" href="javascript:save();">Save <i class="icon-save"></i></a></li>
 		</ul>
 	</section>
@@ -26,11 +27,9 @@
 				<a href="javascript:void(0);" class="icon-close close-button right"></a>
 				<h1>Add Path</h1> 
 			</div>
-			<form method="get" onSubmit="add_path(this); return false;">
-				<p><input type="text" name="Name" value="" placeholder="Name"></p>
-				<p><input type="url" name="path" value="" placeholder="Path"></p>
-				<p class="submit"><input type="submit" name="commit" value="Add"></p>
-			</form>
+			<p><input type="text" name="Name" value="" placeholder="Name"></p>
+			<p><input type="url" name="path" value="" placeholder="Path"></p>
+			<p class="submit"><input type="submit" name="commit" value="Add"></p>
 		</div>
 	</section>
 	<div id="footer">

@@ -1,23 +1,5 @@
-// listening for an event / one-time requests
-// coming from the popup
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    switch(request.type) {
-        case "open-tab":
-            openTab();
-        break;
-        case "start-open-tabs":
-            openTab();
-            console.log('start-open-tabs');
-        break;
-    }
-    
-
-    return true;
-});
- 
  var ports = {};
 // listening for an event / long-lived connections
-// coming from devtools
 chrome.extension.onConnect.addListener(function (port) {
     ports[port.portId_] = port;
     port.onDisconnect.addListener(function(port) {
@@ -26,36 +8,37 @@ chrome.extension.onConnect.addListener(function (port) {
     port.onMessage.addListener(function (message) {
         
         switch(port.name) {
-            case "color-divs-port":
-                colorDivs();
-                openTab();
+            case "open-tabs-port":
+                openTab(message);
             break;
         }
     });
 });
  
 // send a message to the content script
-var colorDivs = function() {
-    chrome.tabs.getSelected(null, function(tab){
-        chrome.tabs.sendMessage(tab.id, {type: "colors-div", color: "#F00"});
-        // setting a badge
-        // chrome.browserAction.setBadgeText({text: "red!"});
-    });
-}
+// var colorDivs = function() {
+//     chrome.tabs.getSelected(null, function(tab){
+//         chrome.tabs.sendMessage(tab.id, {type: "colors-div", color: "#F00"});
+//         // setting a badge
+//         // chrome.browserAction.setBadgeText({text: "red!"});
+//     });
+// }
 
 var openTab = function(){
     var data = get_options();
       
-
     if(!!data){
         var links = data[0];
-    }
-    // TODO - make its work
-      for (var i = 0; i < paths.length; i++) {
-        var name = paths[i].name;
-        var path = paths[i].path;
+        var refreshRate = data[1];
+        var nextTabRate = data[2];
+
+        for (var i = 0; i < links.length; i++) {
+        var name = links[i].name;
+        var path = links[i].path;
+        var checked = links[i].checked;
+        var id = links[i].id;
         
-        chrome.tabs.create({url:'https://www.google.com/analytics/web/'+path},
+        chrome.tabs.create({url:path},
         function(tab){
             console.log('Opened new tab with id:'+tab.id);
             Object.keys(ports).forEach(function(portId_) {
@@ -63,7 +46,7 @@ var openTab = function(){
             });
         });
       }
-    
+    }
 }
 
 function get_options() {

@@ -258,7 +258,7 @@ input[type=checkbox]:checked + .toggle:after{
 .paths-footer .refresh { margin-top: -5px; }
 
 .paths-footer .save { float: right }
-
+.paths-footer .clear { float: left; }
 .paths-footer .save i { margin: 0 0 0 2px }
 
 .paths-footer a, .paths-footer span {

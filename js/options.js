@@ -16,21 +16,25 @@ function close_add_container(){
 	$('.add-container').hide();
 }
 
-function add_path(form){
-	if(form.length < 2 || !form[0].value || !form[1].value){
-		alert('Please fill in the form');
-	}
+function add_path(e){
+	var name = $('.add-form > p:nth-child(2) > input');
+	var path = $('.add-form > p:nth-child(3) > input');
 
+	if(!name.val() || !path.val()){
+		alert('Please fill in the form');
+		return false;
+	}
 	pathsList.push({
 		id: pathsList.length,
-		name: form[0].value,
-		path: form[1].value,
+		name: name.val(),
+		path: path.val(),
 		checked: ''
 	});
 
 	refresh_list();
 	close_add_container();
-	form.reset();
+	path.val('');
+	name.val('');
 }
 
 function delete_row(e){
@@ -42,7 +46,8 @@ function delete_row(e){
 	var i = 0, n = pathsList.length;
 	for(; i < n ; i++){
 		if(id.replace('path-', '') == pathsList[i].id){
-			delete pathsList[i];
+			// delete pathsList[i];
+			pathsList.splice(i, 1);
 			break;
 		}
 	}
@@ -59,6 +64,7 @@ function row_toggle(e){
 function on_dom_ready(){
 	$('.path-list').on('click', '.delete-row', delete_row);
 	$('.path-list').on('click', '.toggle', row_toggle);
+	$('.add-form').on('click', 'input[type=submit]', add_path);
 	restore_options();
 }
 
@@ -70,6 +76,13 @@ function refresh_list(){
 	// build from start
 	var i = 0, n = pathsList.length;
 	for(; i < n ; i++){
+		// if(!pathsList[i]){
+		// 	pathsList.splice(i, 1);
+		// 	if(!!pathsList.length){
+		// 		i--;
+		// 		continue;
+		// 	}
+		// }
 		var rowId = 'path-' + pathsList[i].id;
 		var inputEl = $('<input type="checkbox" id="' + rowId + '" name="' + pathsList[i].name + '" value="' + pathsList[i].path + '" '+pathsList[i].checked+'/>');
 		var lableEl = $('<label class="toggle" for="' + rowId + '"></label>');
@@ -104,17 +117,24 @@ function save(){
 	localStorage['paths-list'] = JSON.stringify(pathsList);
 	localStorage['refresh-rate'] = $('input[name=refresh]').val();
 	localStorage['next-tab-rate'] = $('input[name=nextTab]').val();
+}
 
-	// TODO - update the user ...
-	// save the refresh value
+function clear(){
+	delete localStorage['paths-list'];
+	pathsList = [];
+	refresh_list();
 }
 
 function restore_options() {
   var paths = localStorage['paths-list'];
-  if(!paths) return;
+  if(!paths || !paths.length) return;
   try{
     pathsList = JSON.parse(paths);
-    refresh_list();
+    if(typeof pathsList === 'object'){
+		refresh_list();
+    }else{
+		clear();
+    }
   }catch (e){
   }
 
