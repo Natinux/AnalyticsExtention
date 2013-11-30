@@ -102,8 +102,8 @@ function update_list(id, opts){
 
 function save(){
 	localStorage['paths-list'] = JSON.stringify(pathsList);
-	localStorage['refresh-rate'] = JSON.stringify($('input[name=refresh]').val());
-	localStorage['next-tab-rate'] = JSON.stringify($('input[name=nextTab]').val());
+	localStorage['refresh-rate'] = $('input[name=refresh]').val();
+	localStorage['next-tab-rate'] = $('input[name=nextTab]').val();
 
 	// TODO - update the user ...
 	// save the refresh value
@@ -122,14 +122,12 @@ function restore_options() {
 	var refreshRate = localStorage['refresh-rate'];
 	if(!!refreshRate){
 		$('input[name=refresh]').val(refreshRate);
-		console.log("refresh:"+refreshRate);
 	}
 
 	//=============================
 	var nextTabRate = localStorage['next-tab-rate'];
 	if(!!nextTabRate){
 		$('input[name=nextTab]').val(nextTabRate);
-		console.log('nextTab:'+nextTabRate);
 	}
 }
 
