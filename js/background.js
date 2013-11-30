@@ -5,8 +5,12 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
         case "open-tab":
             openTab();
         break;
+        case "start-open-tabs":
+            openTab();
+            console.log('start-open-tabs');
+        break;
     }
-    console.log('message');
+    
 
     return true;
 });
@@ -40,15 +44,13 @@ var colorDivs = function() {
 }
 
 var openTab = function(){
-    var paths = localStorage['paths'];
-      if(!paths) return;
-      try{
-        paths = JSON.parse(paths);
-      }catch (e){
-        return;
-      }
+    var data = get_options();
       
 
+    if(!!data){
+        var links = data[0];
+    }
+    // TODO - make its work
       for (var i = 0; i < paths.length; i++) {
         var name = paths[i].name;
         var path = paths[i].path;
@@ -62,6 +64,29 @@ var openTab = function(){
         });
       }
     
+}
+
+function get_options() {
+    var data = [];
+  var paths = localStorage['paths-list'];
+  if(!paths || !paths.length) return;
+  try{
+    data.push(JSON.parse(paths));
+  }catch (e){
+  }
+
+    //==============================
+    var refreshRate = localStorage['refresh-rate'];
+    if(!!refreshRate){
+        data.push(refreshRate);        
+    }
+
+    //=============================
+    var nextTabRate = localStorage['next-tab-rate'];
+    if(!!nextTabRate){
+        data.push(nextTabRate);
+    }
+    return data;
 }
 
 var highlightTab = function(tabId){
