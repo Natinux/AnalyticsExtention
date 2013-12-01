@@ -66,8 +66,8 @@ var openTab = function(){
         if(!!refreshRate){
             refreshRate *= 1000;
             refreshIntervalId = setInterval(function(){
+                
                 // TODO - Fix this
-
                 chrome.tabs.query({active:false}, function(tabs){
                     for(var i=0;i<tabList.length; i++){
                         for(var j=0;j<tabs.length; j++){
@@ -78,28 +78,6 @@ var openTab = function(){
                         }
                     }
                 });
-               // chrome.tabs.query({active:true}, function(tabs){
-               //     console.log(tabs);
-               //     for(var i=0;i<tabList.length; i++){
-               //         if(tabList[i].path === tab)
-               //     }
-               // });
-                // for(var i=0;i<tabList.length; i++){
-//                    if(currentIndex === i || tabList[i].id === currentActiveTab){
-//                        continue;
-//                    }
-                    // console.log("Active tab:"+tabList[i].name);
-                    // console.log("Current Active tab:"+aaaccc);
-                    // if(aaaccc === tabList[i].tabInfo.id){
-                    //     console.log("Active tab:"+tabList[i].name);
-//                         chrome.tabs.get(tabList[i].tabInfo.id, function(tab){
-// //                        if(!tab.active){
-//                             console.log('Refresh tab:'+tab.title);
-//                             chrome.tabs.reload(tab.id);
-// //                        }
-//                         });
-                    // }
-                // }
             }, refreshRate);
         }
     }
