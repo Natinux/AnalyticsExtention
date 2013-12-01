@@ -45,6 +45,10 @@ var openTab = function(){
                     console.log('Opened new tab with id:'+tab.id + ' with name:'+link.name);
                     link.tabInfo = tab;
                     tabList.push(link);
+
+                    chrome.tabs.executeScript(tab.id, {
+                            code:'setTimeout(function(){document.querySelector(".account_label_1").style.fontSize="32px";}, 1000);'
+                    });
                 };
             })(links[i]));
         }
@@ -62,16 +66,27 @@ var openTab = function(){
         if(!!refreshRate){
             refreshRate *= 1000;
             refreshIntervalId = setInterval(function(){
+                // TODO - Fix this
+//                chrome.tabs.query({active:true}, function(tabs){
+//                    console.log(tabs);
+//                    for(var i=0;i<tabList.length; i++){
+//                        if(tabList[i].path === tab)
+//                    }
+//                });
                 for(var i=0;i<tabList.length; i++){
-                    if(currentIndex === i){
-                        continue;
-                    }
-                    chrome.tabs.get(tabList[i].tabInfo.id, function(tab){
+//                    if(currentIndex === i || tabList[i].id === currentActiveTab){
+//                        continue;
+//                    }
+                    console.log("Active tab:"+tabList[i].name);
+                    console.log("Current Active tab:"+currentActiveTab);
+                    if(false){
+                        chrome.tabs.get(tabList[i].tabInfo.id, function(tab){
 //                        if(!tab.active){
                             console.log('Refresh tab:'+tab.title);
                             chrome.tabs.reload(tab.id);
 //                        }
-                    });
+                        });
+                    }
                 }
             }, refreshRate);
         }
@@ -121,3 +136,4 @@ var activeTab = function(tabId){
 var tabList = [];
 var intervalId;
 var refreshIntervalId;
+var currentActiveTab;
