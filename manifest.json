@@ -1,8 +1,8 @@
 {
-    "name": "Analytics",
-    "version": "0.0.1",
+    "name": "Tab-Switcher",
+    "version": "0.0.2",
     "manifest_version": 2,
-    "description":"Google analytics viewer.",
+    "description":"Tabs Switcher.",
     "icons":{
         "16": "icons/16x16.png",
         "19": "icons/19x19.png",
@@ -16,22 +16,15 @@
     		"19": "icons/19x19.png",
     		"38": "icons/38x38.png"
     	},
-    	"default_title": "Google Analytics",
+    	"default_title": "Tab-Switcher",
     	"default_popup": "html/popup.html"
     },
     "background":{
     	"scripts": ["js/background.js"],
     	"persistent": true
     },
-    "content_scripts":[{
-    	"matches": ["http://*/*", "https://*/*"],
-    	"js": ["js/content.js"]
-    }],
     "permissions":[
         "webNavigation",
-    	"webRequest",
-    	"webRequestBlocking",
-    	"*://*.google.com/analytics/*",
         "tabs"
     ]
 }
