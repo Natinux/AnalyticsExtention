@@ -114,6 +114,7 @@ function update_list(id, opts){
 }
 
 function save(){
+	console.log('Saving');
 	localStorage['paths-list'] = JSON.stringify(pathsList);
 	localStorage['refresh-rate'] = $('input[name=refresh]').val();
 	localStorage['next-tab-rate'] = $('input[name=nextTab]').val();

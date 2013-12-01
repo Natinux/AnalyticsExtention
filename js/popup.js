@@ -3,6 +3,12 @@ function on_dom_ready(){
 	port = chrome.extension.connect({ name: "open-tabs-port" });
 	port.onMessage.addListener(function (message) {
 	});
+	var status = localStorage['status'];
+	if(status === 'running'){
+		$('button')[0].className = btnStates[1];
+	}else{
+		$('button')[0].className = btnStates[0];
+	}
 }
 
 function btn_clicked(e){

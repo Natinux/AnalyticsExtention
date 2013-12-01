@@ -7,22 +7,16 @@ chrome.extension.onConnect.addListener(function (port) {
     });
     port.onMessage.addListener(function (message) {
         
-        switch(port.name) {
-            case "open-tabs-port":
-                openTab(message);
+        switch(message.type){
+            case "start-switcher":
+                openTab();
+            break;
+            case 'stop-switcher':
+                stop_op();
             break;
         }
     });
 });
- 
-// send a message to the content script
-// var colorDivs = function() {
-//     chrome.tabs.getSelected(null, function(tab){
-//         chrome.tabs.sendMessage(tab.id, {type: "colors-div", color: "#F00"});
-//         // setting a badge
-//         // chrome.browserAction.setBadgeText({text: "red!"});
-//     });
-// }
 
 var openTab = function(){
     var data = get_options();
@@ -33,21 +27,38 @@ var openTab = function(){
         var nextTabRate = data[2];
 
         for (var i = 0; i < links.length; i++) {
-        var name = links[i].name;
-        var path = links[i].path;
-        var checked = links[i].checked;
-        var id = links[i].id;
-        
-        chrome.tabs.create({url:path},
-        function(tab){
-            console.log('Opened new tab with id:'+tab.id);
-            Object.keys(ports).forEach(function(portId_) {
-                ports[portId_].postMessage('New tab ['+tab.id+']');
+            var path = links[i].path;
+            if(!links[i].checked) continue;
+
+            chrome.tabs.create({url:path},(function(link){
+                return function(tab){
+                    console.log('Opened new tab with id:'+tab.id + ' with name:'+link.name);
+                    link.tabInfo = tab;
+                    tabList.push(link);
+                };
+            })(links[i]));
+        }
+
+        nextTabRate = parseInt(nextTabRate, 10) || 10;
+        nextTabRate *= 1000;
+        var currentIndex = 0;
+        intervalId = setInterval(function(){
+            localStorage['status'] = 'running';
+            chrome.tabs.update(tabList[currentIndex++].tabInfo.id,
+            {
+                active:true
             });
-        });
-      }
+            if(currentIndex >= tabList.length) currentIndex = 0;
+        }, nextTabRate);
     }
 }
+
+function stop_op(){
+    localStorage['status'] = 'stopped';
+    clearInterval(intervalId);
+    // chrome.tabs.remove(integer or array of integer tabIds, function callback)
+}
+
 
 function get_options() {
     var data = [];
@@ -78,33 +89,5 @@ var highlightTab = function(tabId){
     });
 }
 
-// chrome.webRequest.onBeforeRequest.addListener(
-//     function(details) {
-//         if(details.url.indexOf('analytics') > 0){
-//             details.type = "xmlhttprequest";
-//         }
-//          return details;
-//     },
-//     {
-//         urls: [
-//             "*://*.google.com/analytics/*"
-//         ],
-//         types: ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
-//     },
-//     ["blocking"]
-// );
-
-
-// chrome.webRequest.onHeadersReceived.addListener(function(details){
-// 	// console.log(details);
-// 	var headers = details.responseHeaders;
-//     for(var i = 0; i < details.responseHeaders.length; ++i){
-//     	if(details.responseHeaders[i].name.toLowerCase() == 'x-frame-options'){
-//     		// details.responseHeaders[i].value = 'text/plain';
-//     		// details.responseHeaders[i]
-//     		console.log('Removed x-frame-options header.');
-//     		headers.splice(i, 1);
-//     	}
-//     }
-//     return {responseHeaders:headers};
-// }, {urls: ["<all_urls>"]}, ['blocking', 'responseHeaders']);
+var tabList = [];
+var intervalId;
