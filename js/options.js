@@ -115,7 +115,7 @@ function save(){
 }
 
 function clear(){
-    if(confirm("You Sure?\nThis cannot be undone...")){
+    if(confirm("You Sure?\nThis operation can't be undone...")){
         delete localStorage['paths-list'];
         pathsList = [];
         refresh_list();
