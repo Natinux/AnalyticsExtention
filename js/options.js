@@ -55,7 +55,6 @@ function delete_row(e){
 
 function row_toggle(e){
 	var id = $(e.currentTarget).attr('for').replace('path-', '');
-	// console.log('checked:'+!e.currentTarget.control.checked);
 	update_list(id, {
 		checked: !e.currentTarget.control.checked ? 'checked' : ''
 	});
@@ -65,6 +64,8 @@ function on_dom_ready(){
 	$('.path-list').on('click', '.delete-row', delete_row);
 	$('.path-list').on('click', '.toggle', row_toggle);
 	$('.add-form').on('click', 'input[type=submit]', add_path);
+    $('#save-button').on('click', save);
+    $('#clear-button').on('click', clear);
 	restore_options();
 }
 
@@ -76,17 +77,10 @@ function refresh_list(){
 	// build from start
 	var i = 0, n = pathsList.length;
 	for(; i < n ; i++){
-		// if(!pathsList[i]){
-		// 	pathsList.splice(i, 1);
-		// 	if(!!pathsList.length){
-		// 		i--;
-		// 		continue;
-		// 	}
-		// }
 		var rowId = 'path-' + pathsList[i].id;
 		var inputEl = $('<input type="checkbox" id="' + rowId + '" name="' + pathsList[i].name + '" value="' + pathsList[i].path + '" '+pathsList[i].checked+'/>');
 		var lableEl = $('<label class="toggle" for="' + rowId + '"></label>');
-		var deleteEl = $('<a class="delete-row icon-delete" href="javascript:void(0);"></a>');
+		var deleteEl = $('<a class="delete-row icon-delete" href="#"></a>');
 
 		var liEl = $('<li></li>');
 		liEl.append(inputEl);
@@ -121,9 +115,11 @@ function save(){
 }
 
 function clear(){
-	delete localStorage['paths-list'];
-	pathsList = [];
-	refresh_list();
+    if(confirm("You Sure?\nThis cannot be undone...")){
+        delete localStorage['paths-list'];
+        pathsList = [];
+        refresh_list();
+    }
 }
 
 function restore_options() {
@@ -160,4 +156,4 @@ function before_leave(e){
 
 var pathsList = [];
 document.addEventListener('DOMContentLoaded', on_dom_ready);
-window.addEventListener('beforeunload', before_leave);
+//window.addEventListener('beforeunload', before_leave);

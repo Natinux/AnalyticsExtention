@@ -1,4 +1,5 @@
  var ports = {};
+ var is_running = false;
 // listening for an event / long-lived connections
 chrome.extension.onConnect.addListener(function (port) {
     ports[port.portId_] = port;
@@ -14,13 +15,22 @@ chrome.extension.onConnect.addListener(function (port) {
             case 'stop-switcher':
                 stop_op();
             break;
+            case 'get-status':
+                get_status();
+            break;
         }
     });
 });
 
+ function get_status(){
+     Object.keys(ports).forEach(function(portId_) {
+         ports[portId_].postMessage({ type: "status", running:!!is_running});
+     });
+ }
+
 var openTab = function(){
     var data = get_options();
-      
+    tabList = [];
     if(!!data){
         var links = data[0];
         var refreshRate = data[1];
@@ -42,21 +52,42 @@ var openTab = function(){
         nextTabRate = parseInt(nextTabRate, 10) || 10;
         nextTabRate *= 1000;
         var currentIndex = 0;
+        is_running = true;
         intervalId = setInterval(function(){
-            localStorage['status'] = 'running';
-            chrome.tabs.update(tabList[currentIndex++].tabInfo.id,
-            {
-                active:true
-            });
+            activeTab(tabList[currentIndex++].tabInfo.id);
             if(currentIndex >= tabList.length) currentIndex = 0;
         }, nextTabRate);
+
+        refreshRate = parseInt(refreshRate, 10);
+        if(!!refreshRate){
+            refreshRate *= 1000;
+            refreshIntervalId = setInterval(function(){
+                for(var i=0;i<tabList.length; i++){
+                    if(currentIndex === i){
+                        continue;
+                    }
+                    chrome.tabs.get(tabList[i].tabInfo.id, function(tab){
+//                        if(!tab.active){
+                            console.log('Refresh tab:'+tab.title);
+                            chrome.tabs.reload(tab.id);
+//                        }
+                    });
+                }
+            }, refreshRate);
+        }
     }
 }
 
 function stop_op(){
-    localStorage['status'] = 'stopped';
     clearInterval(intervalId);
-    // chrome.tabs.remove(integer or array of integer tabIds, function callback)
+    clearInterval(refreshIntervalId);
+    is_running = false;
+    var tabs = [];
+    for(var i=0;i<tabList.length; i++){
+        tabs.push(tabList[i].tabInfo.id);
+        console.log('Close tab:'+tabList[i].name);
+    }
+    chrome.tabs.remove(tabs);
 }
 
 
@@ -83,11 +114,10 @@ function get_options() {
     return data;
 }
 
-var highlightTab = function(tabId){
-    chrome.tabs.highlight({tabs:tabId}, function(win){
-
-    });
+var activeTab = function(tabId){
+    chrome.tabs.update(tabId, {active:true});
 }
 
 var tabList = [];
 var intervalId;
+var refreshIntervalId;

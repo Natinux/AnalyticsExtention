@@ -1,14 +1,16 @@
 function on_dom_ready(){
 	$('button').on('click', btn_clicked);
+
 	port = chrome.extension.connect({ name: "open-tabs-port" });
 	port.onMessage.addListener(function (message) {
+        if(message.type === 'status' && !!message.running){
+            console.log('Running');
+            $('button')[0].className = btnStates[1];
+        }else{
+            $('button')[0].className = btnStates[0];
+        }
 	});
-	var status = localStorage['status'];
-	if(status === 'running'){
-		$('button')[0].className = btnStates[1];
-	}else{
-		$('button')[0].className = btnStates[0];
-	}
+    port.postMessage({ type: "get-status"});
 }
 
 function btn_clicked(e){
