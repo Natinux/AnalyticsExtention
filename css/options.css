@@ -81,9 +81,9 @@ a:hover { text-decoration: underline }
   -webkit-font-smoothing: antialiased;
 }
 
-.icon-add:before { content: "\e601"; }
+.icon-add:before { content: "\e600"; }
 
-.icon-save:before { content: "\e602"; }
+.icon-save:before { content: "\e603"; }
 
 .icon-close{
   margin-right: -4px;
@@ -92,17 +92,25 @@ a:hover { text-decoration: underline }
 .icon-close:hover{
   text-decoration: none;
 }
-.icon-close:before { content: "\e603"; }
+.icon-close:before { content: "\e604"; }
 
 .icon-delete { 
   float: right;
-  margin-top: 5px;
+  /*margin-top: 5px;*/
  }
- .icon-delete:before{ content: "\e600"; }
+ .icon-delete:before{ content: "\e601"; }
+ .icon-setting:before{ content: "\e602"; }
 /* ========================================================
    Paths List
    =====================================================
    ================================================== */
+   .row-buttons{
+    float: right;
+    margin-top: 5px;
+   }
+   .row-buttons a{
+    margin-left: 5px;
+   }
 
 .options {
     position: relative;
@@ -295,7 +303,7 @@ input[type=checkbox]:checked + .toggle:after{
    =====================================================
    ===================================================== */
 
-.add-container {
+.add-container, .row-setting-container {
   margin: 80px auto;
   width: 640px;
   position: absolute;
@@ -303,7 +311,8 @@ input[type=checkbox]:checked + .toggle:after{
   display: none;
 }
 
-.add-container .background{
+.add-container .background,
+.row-setting-container .background{
   background-color: #000000;
   height: 100%;
   left: 0;
@@ -470,4 +479,13 @@ input[type=submit]:active {
     text-align: center;
     text-shadow: 0 1px 1px #FFFFFF;
     top: 0;
+}
+
+.add-form aside{
+  color: white;
+}
+
+textarea[name=code] {
+  width: 100%;
+  height: 200px;
 }

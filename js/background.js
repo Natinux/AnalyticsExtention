@@ -45,13 +45,15 @@ var openTab = function(){
                     console.log('Opened new tab with id:'+tab.id + ' with name:'+link.name);
                     link.tabInfo = tab;
                     tabList.push(link);
-
-                    chrome.tabs.executeScript(tab.id, {
-                            code:'setTimeout(function(){document.querySelector(".account_label_1").style.fontSize="32px";}, 1000);'
-                    });
+                    allTabs[tab.id] = tab;
+                    if(!!link.reloadCode){
+                        allTabs[tab.id].reloadCode = link.reloadCode;
+                    }
                 };
             })(links[i]));
         }
+
+        on_update();
 
         nextTabRate = parseInt(nextTabRate, 10) || 10;
         nextTabRate *= 1000;
@@ -61,6 +63,7 @@ var openTab = function(){
             activeTab(tabList[currentIndex++].tabInfo.id);
             if(currentIndex >= tabList.length) currentIndex = 0;
         }, nextTabRate);
+        
 
         refreshRate = parseInt(refreshRate, 10);
         if(!!refreshRate){
@@ -68,7 +71,7 @@ var openTab = function(){
             refreshIntervalId = setInterval(function(){
                 
                 // TODO - Fix this
-                chrome.tabs.query({active:false}, function(tabs){
+                chrome.tabs.query({active:tabList.length === 1 ? true : false}, function(tabs){
                     for(var i=0;i<tabList.length; i++){
                         for(var j=0;j<tabs.length; j++){
                             if(tabs[j].id === tabList[i].tabInfo.id){
@@ -82,6 +85,28 @@ var openTab = function(){
         }
     }
 }
+
+function on_update(){
+    chrome.tabs.onUpdated.addListener(function(/*integer*/ tabId, /*object*/ changeInfo, /*Tab*/ tab){
+        if(!!changeInfo && !!changeInfo.status && changeInfo.status === 'complete' && !!allTabs[tab.id]){
+
+            if(!!allTabs[tab.id].reloadCode){
+                chrome.tabs.executeScript(tab.id, {
+                        code:allTabs[tab.id].reloadCode
+                });    
+            }
+            // TODO - make a global one... too.
+            // chrome.tabs.executeScript(tab.id, {
+            //         code:'setTimeout(function(){document.querySelector(".account_label_1").style.fontSize="32px";}, 100);'
+            // });
+        }
+    });
+}
+
+function get_our_tab_data(){
+
+}
+
 
 function stop_op(){
     clearInterval(intervalId);
@@ -127,3 +152,4 @@ var tabList = [];
 var intervalId;
 var refreshIntervalId;
 var currentActiveTab;
+var allTabs = {}; // Q&D workaround....
