@@ -8,12 +8,19 @@
 	<section class="options">
 		<ul class="paths-controls">
 			<li><a href="#" class="icon-add add-button"></a></li>
+			<li><a href="#" class="icon-setting global-settings-button"></a></li>
 		</ul>
 	
 		<ul class="path-list">
 		</ul>
-		
+		<ul class="settings-list">
+		<li>Global Settings:</li>
+		<li>
+		<input type="checkbox" id="reload-cb" name="reload-cb"><label class="toggle" for="reload-cb"></label><span class="row-buttons"><a href="#" class="icon-setting add-settings-button"></a></span>Page reload script
+		</li>
+		</ul>
 		<ul class="paths-footer">
+
 			<li class="refresh">Refresh Rate:<input id="refresh-input" type="number" placeholder="[0-...]" value="0" name="refresh">seconds (0 for disable)</li>
 			<li class="refresh">Next Tab Rate:<input type="number" placeholder="[1-...]" value="0" name="nextTab">seconds (Default:10)</li>
 			<li class="clear"><a id="clear-button" href="#">Clear<i class="icon-clear"></i></a></li>

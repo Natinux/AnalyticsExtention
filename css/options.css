@@ -152,8 +152,10 @@ a:hover { text-decoration: underline }
 }
 
 .path-list { border-top: 1px solid #e6ebed }
+.settings-list{ border-top: 1px solid #323232 }
 
-.path-list:before {
+.path-list:before,
+.settings-list:before {
     content: '';
     width: 3px;
     z-index: 2;
@@ -165,7 +167,8 @@ a:hover { text-decoration: underline }
     left: 35px;
 }
 
-.path-list li {
+.path-list li,
+.settings-list li {
     position: relative;
     padding: 7px 15px 7px 50px;
     line-height: 21px;
@@ -182,7 +185,8 @@ input[type=checkbox]:checked + .toggle:after{
   opacity: 1;
 }
 
-.path-list .toggle {
+.path-list .toggle,
+.settings-list .toggle {
   display: block;
   height: 35px;
   width: 35px;
@@ -213,7 +217,8 @@ input[type=checkbox]:checked + .toggle:after{
   opacity: 0;
 }
 
-.path-list .toggle:before {
+.path-list .toggle:before,
+.settings-list .toggle:before {
     content: '';
     width: 15px;
     height: 15px;
@@ -227,12 +232,14 @@ input[type=checkbox]:checked + .toggle:after{
     box-shadow: 0 1px 1px #dfecf4;
 }
 
-.path-list .toggle:hover:before {
+.path-list .toggle:hover:before,
+.settings-list .toggle:hover:before {
     -webkit-box-shadow: 0 0 3px #6bb3ca;
     box-shadow: 0 0 3px #6bb3ca;
 }
 
-.path-list .done .toggle:before, .path-list .toggle:active:before {
+.path-list .done .toggle:before, .path-list .toggle:active:before,
+.settings-list .done .toggle:before, .settings-list .toggle:active:before {
     border-color: #c0c0c0 #ccc #d8d8d8;
     -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.05), inset 0 5px 5px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.05), inset 0 5px 5px rgba(0, 0, 0, 0.05);

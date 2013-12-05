@@ -41,14 +41,22 @@ function add_row_settings(e){
 	var code = $('textarea[name=code]').val();
 	var row_id = parent.attr('data-row-id');
 	if(!!row_id && !!code){
-		// add to array
-		var i = 0, n = pathsList.length;
-		for(; i < n ; i++){
-			if(row_id.replace('path-', '') == pathsList[i].id){
-				pathsList[i].reloadCode = code;
-				break;
-			}
+		if(row_id.indexOf('path-') >= 0){
+			// add to array
+			var i = 0, n = pathsList.length;
+			for(; i < n ; i++){
+				if(row_id.replace('path-', '') == pathsList[i].id){
+					pathsList[i].reloadCode = code;
+					break;
+				}
+			}	
+		}else if(row_id == 'reload-cb'){
+			localStorage['reload-cb'] = JSON.stringify({
+				text: code,
+				enabled: false
+			});
 		}
+		
 	}
 }
 
@@ -71,12 +79,16 @@ function delete_row(e){
 }
 
 function get_row_info(row_id){
-	if(!!row_id){
-		var i = 0, n = pathsList.length;
-		for(; i < n ; i++){
-			if(row_id.replace('path-', '') == pathsList[i].id){
-				return pathsList[i];
-			}
+	if(!row_id) return;
+	if(row_id === 'reload-cb'){
+		return {
+			reloadCode:JSON.parse(localStorage['reload-cb']).text
+		};
+	}
+	var i = 0, n = pathsList.length;
+	for(; i < n ; i++){
+		if(row_id.replace('path-', '') == pathsList[i].id){
+			return pathsList[i];
 		}
 	}
 	return;
@@ -104,6 +116,7 @@ function show_row_settings(e){
 function on_dom_ready(){
 	$('.path-list').on('click', '.delete-row', delete_row);
 	$('.path-list').on('click', '.add-settings-button', show_row_settings);
+	$('.settings-list').on('click', '.add-settings-button', show_row_settings);
 	$('.path-list').on('click', '.toggle', row_toggle);
 	$('.add-form').on('click', 'input[name=commit]', add_path);
 	$('.add-form').on('click', 'input[name=add-row-settings]', add_row_settings);
